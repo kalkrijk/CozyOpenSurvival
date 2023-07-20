@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 530831169}
   - component: {fileID: 530831168}
   - component: {fileID: 530831167}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -787,7 +787,7 @@ Rigidbody:
   m_GameObject: {fileID: 2046785017}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 7
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -834,13 +834,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9bb9675569bb7740b4bd679a91a8b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
-  playerOrientation: {fileID: 2046785019}
+  moveSpeed: 2
+  jumpHeight: 400
   rb: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
-  playerHeight: 0
+    m_Bits: 64
+  playerHeight: 2
+  playerDrag: 10
+  airControl: 0.01
+  airDrag: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

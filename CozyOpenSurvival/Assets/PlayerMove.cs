@@ -5,15 +5,17 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed;
+    public float jumpHeight;
     private Vector3 moveDirection;
-
-
-    [SerializeField] private Transform playerOrientation;
-    [SerializeField] private Rigidbody rb;
-
-    [SerializeField] private LayerMask whatIsGround;
     bool isGrounded;
-    [SerializeField] private int playerHeight;
+
+
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private float playerHeight;
+    [SerializeField] private float playerDrag;
+    [SerializeField] private float airControl;
+    [SerializeField] private float airDrag;
 
 
     
@@ -25,11 +27,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        
-    }
-
-    private void FixedUpdate()
-    {
+        CalculateDrag();
         Move();
     }
 
@@ -38,8 +36,37 @@ public class PlayerMove : MonoBehaviour
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        moveDirection = playerOrientation.forward * vertical + playerOrientation.right * horizontal;
+        moveDirection = transform.forward * vertical + transform.right * horizontal;
 
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10, ForceMode.Force);
+        if (isGrounded) 
+        {
+            rb.AddForce(moveDirection * moveSpeed * 10, ForceMode.Force);
+        }
+        else if (!isGrounded) 
+        {
+            rb.AddForce(moveDirection * moveSpeed * 10 * airControl, ForceMode.Force);
+        }
+
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+    }
+
+    private void CalculateDrag()
+    {
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        if (isGrounded)
+        {
+            rb.drag = playerDrag;
+        }
+        else
+        {
+            rb.drag = airDrag;
+        }
+    }
+    private void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpHeight, ForceMode.Force);
     }
 }
