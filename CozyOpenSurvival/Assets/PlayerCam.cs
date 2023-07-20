@@ -15,7 +15,6 @@ public class PlayerCam : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     // Update is called once per frame
@@ -31,5 +30,14 @@ public class PlayerCam : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         playerOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
+
+        if (Cursor.lockState == CursorLockMode.Locked && Input.GetKeyDown(KeyCode.X))
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+        else if (Cursor.lockState == CursorLockMode.Confined && Input.GetKeyDown(KeyCode.X))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 }
