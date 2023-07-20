@@ -8,10 +8,26 @@ public class StartDialogue : MonoBehaviour
 
     [SerializeField] private DialogNodeGraph dialogGraph;
     [SerializeField] private DialogBehaviour dialogBehaviour;
+    [SerializeField] private GameObject playerObj;
+    private bool firstTalk = true;
+    public GameObject Canvas;
     // Start is called before the first frame update
-    void Start()
+
+
+    private void OnCollisionEnter(Collision collision)
     {
-        dialogBehaviour.StartDialog(dialogGraph);
+
+        if (collision.gameObject == playerObj && firstTalk == true)
+        {
+            Debug.Log("Collosion Succesfull");
+            Dialog();
+            firstTalk = false;
+        }
     }
 
+    void Dialog()
+    {
+        Canvas.SetActive(true);
+        dialogBehaviour.StartDialog(dialogGraph);
+    }
 }
