@@ -8,6 +8,7 @@ public class PlayerCam : MonoBehaviour
 
     [SerializeField] private float xSens;
     [SerializeField] private float ySens;
+    private bool useCam;
 
     float xRotation;
     float yRotation;
@@ -20,8 +21,34 @@ public class PlayerCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            useCam = true;
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+        }
+        else if (Cursor.lockState == CursorLockMode.Confined)
+        {
+            useCam = false;
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+
+        if (useCam)
+        {
+            CamLogic();
+        }
+    }
+
+    void CamLogic()
+    {
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.fixedDeltaTime * xSens;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.fixedDeltaTime *ySens;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.fixedDeltaTime * ySens;
 
         yRotation += mouseX;
         xRotation -= mouseY;
@@ -30,14 +57,5 @@ public class PlayerCam : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         playerOrientation.rotation = Quaternion.Euler(0, yRotation, 0);
-
-        if (Cursor.lockState == CursorLockMode.Locked && Input.GetKeyDown(KeyCode.X))
-        {
-            Cursor.lockState = CursorLockMode.Confined;
-        }
-        else if (Cursor.lockState == CursorLockMode.Confined && Input.GetKeyDown(KeyCode.X))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
     }
 }

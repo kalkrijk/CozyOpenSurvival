@@ -52,7 +52,6 @@ public class PlayerMove : MonoBehaviour
             Jump();
         }
     }
-
     private void CalculateDrag()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);

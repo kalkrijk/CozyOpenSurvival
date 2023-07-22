@@ -9,25 +9,50 @@ public class StartDialogue : MonoBehaviour
     [SerializeField] private DialogNodeGraph dialogGraph;
     [SerializeField] private DialogBehaviour dialogBehaviour;
     [SerializeField] private GameObject playerObj;
+    [SerializeField] private GameObject interactText;
+    [SerializeField] private bool canTalk;
     private bool firstTalk = true;
     public GameObject Canvas;
+    public KeyCode interactKey = KeyCode.E;
     // Start is called before the first frame update
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void Update()
     {
+        InteractLogic();
+    }
 
-        if (collision.gameObject == playerObj && firstTalk == true)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject != playerObj)
         {
-            Debug.Log("Collosion Succesfull");
-            Dialog();
-            firstTalk = false;
+            return;
+        }
+        else
+        {
+            interactText.SetActive(true);
+            canTalk = true;
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == playerObj)
+        { 
+            interactText.SetActive(false);
+            canTalk = false;
+        }
+    }
     void Dialog()
     {
         Canvas.SetActive(true);
         dialogBehaviour.StartDialog(dialogGraph);
+        firstTalk = false;
+    }
+    void InteractLogic()
+    {
+        if(canTalk && Input.GetKeyDown(interactKey) && firstTalk)
+        {
+            Dialog();
+        }
     }
 }
