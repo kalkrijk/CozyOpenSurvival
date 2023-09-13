@@ -1,13 +1,20 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CoinPickup : MonoBehaviour
 {
+    [SerializeField] private Text CoinText; 
     // Reference to the CurrencyManager script
     public CurrencyManager currencyManager;
 
     private void Start()
     {
     currencyManager = CurrencyManager.instance;
+    }
+
+    private void Update()
+    {
+        CoinText.text = "Coins: " + currencyManager.GetCurrencyBalance("Coins");
     }
 
     private void OnTriggerEnter(Collider other)
