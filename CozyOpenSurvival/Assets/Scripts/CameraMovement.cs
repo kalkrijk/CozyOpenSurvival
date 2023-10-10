@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode;
 
-public class CameraMovement : MonoBehaviour
+public class CameraMovement : NetworkBehaviour
 {
     [Tooltip("What the camera will look at."), SerializeField]
     private Transform target;
@@ -42,6 +43,7 @@ public class CameraMovement : MonoBehaviour
 
     void Start()
     {
+        if (!IsOwner) return;
         Cursor.lockState = CursorLockMode.Locked;
         Vector3 angles = this.transform.eulerAngles;
         x = angles.y;
@@ -50,8 +52,10 @@ public class CameraMovement : MonoBehaviour
 
     void LateUpdate()
     {
+        if (!IsOwner) return;
         if (target)
         {
+       
             CameraMove();
             rotation = Quaternion.Euler(y, x, 0);
             playerOrientation.rotation = Quaternion.Euler(0,x,0);
@@ -71,6 +75,7 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
         if (Cursor.lockState == CursorLockMode.Locked)
         {
             if (Input.GetKeyDown(KeyCode.X))
@@ -89,6 +94,7 @@ public class CameraMovement : MonoBehaviour
 
     public void CameraMove()
     {
+        if (!IsOwner) return;
         x += Input.GetAxis("Mouse X") * xSpeed;
         y -= Input.GetAxis("Mouse Y") * ySpeed;
 
@@ -113,6 +119,7 @@ public class CameraMovement : MonoBehaviour
 
     void CameraCollision()
     {
+        if (!IsOwner) return;
         Vector3 normal, thickNormal;
         Vector3 ray = transform.position - target.position;
 

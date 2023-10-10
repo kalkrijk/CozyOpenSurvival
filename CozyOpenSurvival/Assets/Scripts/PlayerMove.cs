@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : NetworkBehaviour
 {
     public float moveSpeed;
     public float jumpHeight;
@@ -17,22 +20,24 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float airControl;
     [SerializeField] private float airDrag;
 
-
     
     void Start()
     {
+        if(!IsOwner) return;
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
     }
 
     private void Update()
     {
+        if(!IsOwner) return;
         CalculateDrag();
         Move();
     }
 
     void Move()
     {
+        if(!IsOwner) return;
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
@@ -54,6 +59,7 @@ public class PlayerMove : MonoBehaviour
     }
     private void CalculateDrag()
     {
+        if (!IsOwner) return;
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         if (isGrounded)
         {
@@ -66,6 +72,16 @@ public class PlayerMove : MonoBehaviour
     }
     private void Jump()
     {
+        if (!IsOwner) return;
         rb.AddForce(Vector3.up * jumpHeight, ForceMode.Force);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        IRemoveable removeable = other.GetComponent<IRemoveable>();
+        if (removeable != null)
+        {
+            removeable.Remove();
+        }
     }
 }
